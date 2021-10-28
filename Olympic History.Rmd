@@ -1,0 +1,107 @@
+---
+title: "Olmypic History Trend Analytics"
+author: "Group 9 - Thomas George Thomas, Yang Liu, Pratyush Pothuneedi"
+date: "10/28/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## required packages
+
+```{r}
+library(tidyverse)
+library(reshape2)
+library(dplyr)
+library(knitr)
+
+## Uncomment below to set the working directory.
+##setwd("C:/Users/Docs")
+```
+
+# 1. Data Acquisition
+
+## importing the datasets
+```{r} 
+# Data of the athelets and countries
+atheletes_df <- read.csv('athlete_events.csv', header = TRUE, sep = ',')
+head(atheletes_df, 5) # structure of the dataset
+```
+
+```{r}
+# Importing Data of the regions tied with the NOC code
+regions_df <- read.csv('noc_regions.csv', header= TRUE, sep =',')
+head(regions_df, 5)
+```
+
+# 2. Data Wrangling
+
+## 2.1 Data Discovery
+
+### Summary Statistics
+
+```{r}
+summary(atheletes_df)
+
+```
+## We can see that there are NA's in the numerical fields of Age, Height, Weight which we will be handling
+
+```{r}
+summary(regions_df)
+```
+### Discovering Discrete Data
+
+
+```{r}
+kable(
+  atheletes_df %>%
+    summarise(total_records=n()),
+  caption = "Total Records for Atheletes"
+  
+)
+```
+
+
+
+```{r}
+kable(
+  regions_df %>%
+    summarise(total_records=n()),
+  caption = "Total Records in Regions"
+  
+)
+```
+
+Looking for Na's in all the columns
+
+
+```{r}
+colSums(is.na(atheletes_df))
+
+```
+
+We know that Medal's have NA, taking a closer look
+
+
+```{r}
+kable(
+  atheletes_df %>%
+    group_by(Medal) %>%
+    summarise(total_records=n())
+    ,caption="Records by Medal Count"
+  
+)
+```
+## We can see that NA values also exist for Medals which happens to be categorical data and we need to handle this in the cleaning part
+
+## 2.2 Structuring
+
+```{r}
+head(atheletes_df,5)
+```
+
+## We can see that we need to do additional restructing as columns like "Games" which would require splitting is already split and available as Year and Season
+
+## 2.3 Cleaning
