@@ -43,7 +43,6 @@ head(regions_df, 5)
 
 ```{r}
 summary(atheletes_df)
-
 ```
 **We can see that there are NA's in the numerical fields of Age, Height, Weight which we will be handling**
 
@@ -77,7 +76,8 @@ Looking for NA's in all the columns
 
 
 ```{r}
-colnames(atheletes_df)[apply(atheletes_df, 2, anyNA)]
+# Store the cols with missing values 
+list_na <- colnames(atheletes_df)[apply(atheletes_df, 2, anyNA)]
 
 ```
 
@@ -93,6 +93,12 @@ kable(
   
 )
 ```
+```{r}
+
+```
+
+
+
 **We can see that there are 231333 NA's for Medals which happens to be categorical data and we need to handle this in the cleaning part**
 
 ## 2.2 Structuring
@@ -107,12 +113,79 @@ head(atheletes_df,5)
 
 ### Handling Missing Data
 
-**We can't filter out the NA values since the columns that exhibit them are required for our analysis. We will be filling the NA values in Age, Height, Weight with Mean values and Medals with 'None'. Here, Medals with 'None' would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze). We didn't filter out the NA records in Age, Height and Weight because that would mean that crucial data would be missing leading to data skewness, we are using the Mean values to reduce the degree of skewness while maintaining data integrity**
+**We can't filter out the NA values since the columns that exhibit them are required for our analysis. We will be filling the NA values in Age, Height, Weight with the median values and Medals with 'None'. Here, Medals with 'None' would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze). We didn't filter out the NA records in Age, Height and Weight because that would mean that crucial data would be dropped leading to data skewness, we are using the Median values since we require whole numbers and to reduce the degree of skewness while maintaining data integrity**
 
 Replacing NA's in Medals
 
 ```{r, results=FALSE}
-atheletes_df$Medal %>% 
-  replace_na("None")
+atheletes_df$Medal <- atheletes_df$Medal %>% 
+  replace_na("None") # It is assumed tha the athlete participated in the sport but didn't win a medal
+```
+
+Calculating Missing Median for the missing values for Age, Height and Weight
+
+```{r}
+
+list_na <- list_na[ list_na !="Medal"]
+
+# Calculate median for the missing values
+missing_median <- apply(atheletes_df[,colnames(atheletes_df) %in% list_na],
+      2, # 2 is for Columns
+      median,
+      na.rm =  TRUE)
+missing_median
+```
+
+
+```{r}
+# Replace the missing values with median
+atheletes_df <- atheletes_df %>%
+   mutate(
+     Age  = ifelse(is.na(Age), missing_median[1], Age),
+     Height = ifelse(is.na(Height), missing_median[2], Height),
+     Weight = ifelse(is.na(Weight), missing_median[3], Weight)
+   )
+
+head(atheletes_df,5)
+
+```
+
+## 2.4 Enriching
+
+### Adding Attribute region
+
+We will join regions_df and atheletes_df based on the NOC code to get the Country for enriching the data.
+
+
+```{r}
+athletes <- left_join(atheletes_df, regions_df, by="NOC")
+
+# Replacing Region with Country to make the data more meaningful
+colnames(athletes)[which(names(athletes) == "region")] <- "Country" 
+# Removing notes since it's not relevant to our analysis
+athletes <- athletes[,-17]
+head(athletes,5)
+
+```
+
+**We don't have any other attribute to split or to create a new category since we believe that we have all the required columns for our analysis**
+
+## 2.5 Validating
+
+### Check for any missing values
+
+```{r}
+
+ # Counting the number of NA's for all the columns
+ colnames(athletes)[apply(athletes, 2, anyNA)]
+
+kable(
+  athletes %>%
+    group_by(Country) %>%
+    summarise(total_records=n())
+    ,caption="Records by Medal Count"
+  
+)
+
 ```
 
