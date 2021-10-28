@@ -1,5 +1,5 @@
 ---
-title: "Olmypic History Trend Analytics"
+title: "Project 1: Olmypic History Trend Analytics"
 author: "Group 9 - Thomas George Thomas, Yang Liu, Pratyush Pothuneedi"
 date: "10/28/2021"
 output: pdf_document
@@ -9,9 +9,8 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## required packages
-
-```{r}
+```{r, message=FALSE}
+#Importing Required packages
 library(tidyverse)
 library(reshape2)
 library(dplyr)
@@ -46,7 +45,7 @@ head(regions_df, 5)
 summary(atheletes_df)
 
 ```
-## We can see that there are NA's in the numerical fields of Age, Height, Weight which we will be handling
+**We can see that there are NA's in the numerical fields of Age, Height, Weight which we will be handling**
 
 ```{r}
 summary(regions_df)
@@ -58,7 +57,7 @@ summary(regions_df)
 kable(
   atheletes_df %>%
     summarise(total_records=n()),
-  caption = "Total Records for Atheletes"
+  caption = "Total Records for Athletes"
   
 )
 ```
@@ -74,15 +73,15 @@ kable(
 )
 ```
 
-Looking for Na's in all the columns
+Looking for NA's in all the columns
 
 
 ```{r}
-colSums(is.na(atheletes_df))
+colnames(atheletes_df)[apply(atheletes_df, 2, anyNA)]
 
 ```
 
-We know that Medal's have NA, taking a closer look
+We already knew that Age, Height & Weight have NA's as seen above in the summary. We found that categorical Medal's have NA, taking a closer look:
 
 
 ```{r}
@@ -94,7 +93,7 @@ kable(
   
 )
 ```
-## We can see that NA values also exist for Medals which happens to be categorical data and we need to handle this in the cleaning part
+**We can see that there are 231333 NA's for Medals which happens to be categorical data and we need to handle this in the cleaning part**
 
 ## 2.2 Structuring
 
@@ -102,6 +101,18 @@ kable(
 head(atheletes_df,5)
 ```
 
-## We can see that we need to do additional restructing as columns like "Games" which would require splitting is already split and available as Year and Season
+**We can see that we don't need to do additional restructuring as columns like "Games" is already split and available as Year and Season**
 
 ## 2.3 Cleaning
+
+### Handling Missing Data
+
+**We can't filter out the NA values since the columns that exhibit them are required for our analysis. We will be filling the NA values in Age, Height, Weight with Mean values and Medals with 'None'. Here, Medals with 'None' would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze). We didn't filter out the NA records in Age, Height and Weight because that would mean that crucial data would be missing leading to data skewness, we are using the Mean values to reduce the degree of skewness while maintaining data integrity**
+
+Replacing NA's in Medals
+
+```{r, results=FALSE}
+atheletes_df$Medal %>% 
+  replace_na("None")
+```
+
