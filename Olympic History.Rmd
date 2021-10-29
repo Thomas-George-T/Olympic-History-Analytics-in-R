@@ -171,6 +171,7 @@ regions_df$region <- ifelse(is.na(regions_df$region), regions_df$notes, regions_
 kable(
   regions_df %>%
     filter(is.na(region)) %>%
+    group_by(region) %>%
     summarise(total_records=n())
   ,caption = "Number of NA's in Region after fix"
   
@@ -212,7 +213,7 @@ head(athletes,5)
 kable(
   athletes %>%
     select(NOC,Region)  %>%
-    filter(is.na(Region)) %>%
+    #filter(is.na(Region)) %>%
     group_by(NOC,Region) %>%
     summarise(total_records=n())
     ,caption="Null Records check by Medal Count"
@@ -224,7 +225,7 @@ kable(
 
 ```{r}
 
-athletes$Region <- ifelse(is.na(athletes$Region) && athletes$NOC=='SGP', "Singapore", athletes$Region)
+athletes$Region <- ifelse((is.na(athletes$Region) & athletes$NOC=='SGP'), "Singapore", athletes$Region)
 
 
 kable(
@@ -288,3 +289,23 @@ All our boundary cases looks reasonable and accurate.
 # 2.6 Publishing 
 The data is cleaned & wrangled and made available for the team to develop business cases.
 
+# 3. Business Questions
+
+ 1. Number of medals per region per sport per year
+ 
+```{r}
+
+kable(
+  athletes %>%
+    group_by(Region) %>%
+    summarize(total_medals=n())
+  
+)
+
+
+```
+ 
+ 
+
+  
+  
