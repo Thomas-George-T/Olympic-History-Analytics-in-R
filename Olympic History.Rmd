@@ -213,7 +213,7 @@ head(athletes,5)
 kable(
   athletes %>%
     select(NOC,Region)  %>%
-    #filter(is.na(Region)) %>%
+    filter(is.na(Region)) %>%
     group_by(NOC,Region) %>%
     summarise(total_records=n())
     ,caption="Null Records check by Medal Count"
