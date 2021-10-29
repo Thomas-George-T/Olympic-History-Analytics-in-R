@@ -200,14 +200,15 @@ Top10 <-
     select(Year,City) %>%
     group_by(Year,City) %>%
     summarize(number=n())  %>%
-    arrange(desc(number)) 
+    arrange(desc(number))
 
 kable(
   Top10 
   ,caption=("Top 10 host cities with highest participation")
 )
 
-
+##observation: The top ten cities are Sydney(2000), Atlanta(1996),Rio de Janeiro(2016),Beijing(2008),Athina(2004),Barcelona(19920)
+# London(2012),Seoul(1988),Munich(1972),Los Angeles(1984)
 ```
 
 ```{r fig.width=15}
@@ -230,6 +231,9 @@ ggtitle("Top 10 most participated athlete in the Olympics")+
 geom_vline(xintercept = 0)+
 geom_hline(yintercept = 0)
 
+##Observation:As we can see nearly all the Top 10 anthletes praticipated Olympics more than 30 times 
+## and the most one is the Heikki Ilmari Savolainen	with 39 times
+
 ```
 
 ```{r}
@@ -248,5 +252,8 @@ kable(
   dfuevent
   ,caption=("Athlete with the most number of medals per sport")
   )
+
+# Observation: For the Swimming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of
+## medals equal or more than 10 in different sports
 ```
 
