@@ -15,9 +15,9 @@ library(tidyverse)
 library(reshape2)
 library(dplyr)
 library(knitr)
-
-## Uncomment below to set the working directory.
-##setwd("C:/Users/Docs")
+library(gridExtra)
+library(ggplot2)
+library(data.table)
 ```
 
 # 1. Data Acquisition
@@ -120,13 +120,13 @@ head(atheletes_df,5)
 
 ## 2.3 Cleaning
 
-### Handling Missing Data
+### A. Handling Missing Data
 
 We can't filter out the NA values since the columns that exhibit them are required for our analysis. We will be filling the NA values for numerical columns like Age, Height, Weight with the **median** values since we require whole numbers. The Medals are filled with **'None'** which would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze).
 
 **We didn't filter out the NA records in Age, Height and Weight because that would mean that crucial data would be dropped leading to data skewness, we are using the Median values since we require whole numbers and to reduce the degree of skewness while maintaining data integrity.**
 
-#### Replacing NA's in Medals
+#### B. Replacing NA's in Medals
 
 ```{r, results=FALSE}
 atheletes_df$Medal <- atheletes_df$Medal %>% 
@@ -158,7 +158,7 @@ atheletes_df <- atheletes_df %>%
    )
 ```
 
-#### Handling Missing data in Regions
+#### C. Handling Missing data in Regions
 
 
 ```{r}
@@ -203,7 +203,7 @@ head(athletes,5)
 
 ## 2.5 Validating
 
-### Check for any missing values
+### A. Check for any missing values
 
 ```{r}
 
@@ -243,7 +243,7 @@ kable(
 
 
 
-# Check for Duplicates
+### B. Check for Duplicates
 
 ```{r}
 sum(duplicated(athletes))
@@ -260,7 +260,7 @@ athletes <- unique(athletes)
 
 
 
-# Checking boundary cases
+### C. Checking boundary cases
 
 ```{r}
 kable (
@@ -286,16 +286,15 @@ caption="Weight boundary cases"
 ```
 All our boundary cases looks reasonable and accurate.
 
-# 2.6 Publishing 
+## 2.6 Publishing 
 The data is cleaned & wrangled and made available for the team to develop business cases.
 
 
 # 3. Analytical Questions
 
-### 1. Trend analyis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
+### 1. Trend analysis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
  
-```{r fig.align="center", echo = FALSE,fig.width = 10}
-
+```{r fig.align="center",fig.width = 10}
 p1 <-
 athletes %>%
     filter(Medal!='None' & Year<=1956) %>%
@@ -357,7 +356,7 @@ athletes %>%
 
 **Observation:** From the graph, we can see that there is a gradual increase in the number of medals won by female athletes over time. Male athletes tend to outnumber female athletes but their numbers also keep fluctuating over time. After the years 1994, the summer and winter Olympic games were split and held during seperate years, hence why the graph shows different points.   
 
-##  3. Finding the most participated sport in Olympics every year
+###  3. Finding the most participated sport in Olympics every year
 
 ```{r}
 
@@ -377,33 +376,119 @@ athletes %>%
 ```
 **Observation**: This table shows that Athletics has remained the most contested sport in 120 years of Olympics. Art Competitions were the highest participated Olympic Sport in 1932 before it was removed from the Olympics. As the Olympic Winter and Summer games were seperated into different years from 1994, Cros Country Skiing emerged as the most participated game held during the Winters.
 
-
-
-#### 7. Top 10 host cities with the highest participation.
+### 4. In which Olympic year did a particular country win a medal for the first time for a particular sport
 
 ```{r}
+Ans1 <-
+athletes %>%
+filter(Sport=="Football",Medal!="None") %>%
+select(Region,Year) %>%
+group_by(Region,Year) %>%
+summarise(Year=min(Year))
 
-##Top 10 host cities with highest participation.
+Ans1 <- Ans1[!duplicated(Ans1$Region),]
+
+kable (
+  Ans1,
+  caption="First year in which countries won medal in Football"
+)
+
+```
+
+**Observation:** From the above table we can see the first year in which each country won a medal for football. The first countries to win medals for football are UK,Belgium,France and Netherlands and all these countries are from Europe.
+
+### 5. Trend analysis per sport per country for the gap between medals for Football
+```{r}
+athletes %>%
+filter(Sport=="Football",Medal!="None") %>%
+select(Region, Year) %>%
+group_by(Region) %>%
+summarise(Number_of_Years=max(Year)-min(Year)) %>%
+arrange(desc(Number_of_Years)) %>%
+mutate(Region=factor(Region, levels=Region)) %>%
+slice(1:20) %>%
+ggplot( aes(y=Region, x=Number_of_Years))+
+geom_col(fill="orange") +
+theme_minimal()+
+#labs(y="Region")+
+xlab("Number of Years")+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("Gap between medals for countries for Football")+
+geom_vline(xintercept = 0)+
+geom_hline(yintercept = 0)
+```
+
+**Observation:** The gap between first and last medals for football for each country is displayed. Canada has the largest gap of 112 years while Czech Republic has the smallest gap of 16 years.
+
+
+### 6. Comparison of medals won by regions in Summer & Winter.
+```{r fig.width=10}
+Ans3.1 <-
+athletes %>%
+filter(Medal!='None',Season=="Summer") %>%
+group_by(Region) %>%
+summarize(number_of_medals=n()) %>%
+arrange(desc(number_of_medals)) %>%
+mutate(Region=factor(Region, levels=Region)) %>%
+slice(1:20) %>%
+ggplot( aes(y=Region, x=number_of_medals))+
+geom_col(fill="green") +
+theme_minimal()+
+#labs(y="Region")+
+xlab("Medals")+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("Number of medals won by countries in Summer")+
+geom_vline(xintercept = 0)+
+geom_hline(yintercept = 0)
+
+Ans3.2 <-
+athletes %>%
+filter(Medal!='None',Season=="Winter") %>%
+group_by(Region) %>%
+summarize(number_of_medals=n()) %>%
+arrange(desc(number_of_medals)) %>%
+mutate(Region=factor(Region, levels=Region)) %>%
+slice(1:20) %>%
+ggplot( aes(y=Region, x=number_of_medals))+
+geom_col(fill="purple") +
+theme_minimal()+
+#labs(y="Region")+
+xlab("Medals")+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("Number of medals won by countries in Winter")+
+geom_vline(xintercept = 0)+
+geom_hline(yintercept = 0)
+
+grid.arrange(Ans3.1,Ans3.2,ncol=1)
+
+```
+
+**Observation:** In Summer USA takes the top spot in the number of medals won and Russia stood second. When it comes to winter the positions are interchanged. Germany remains constant in both summer and winter. The graph has a uniform increase in the number of medals in summer but its not a uniform increase in winter, So this means that the winter games are more competitive while summer has a distinctive winner. 
+
+### 7. Top 10 Host cities with the highest participation.
+
+```{r}
+## Top 10 Host cities with highest participation.
 Top10 <-
   athletes %>%
     select(Year,City) %>%
     group_by(Year,City) %>%
-    summarize(number=n())  %>%
+    summarize(number=n()) %>%
     arrange(desc(number))
 
 kable(
-  Top10 
-  ,caption=("Top 10 host cities with highest participation")
+  head(Top10, 10)
+  ,caption=("Host cities with highest participation")
 )
 
-##observation:
+
 ```
 
-**Observation:**  The top ten cities with the highest participation are Sydney(2000), Atlanta(1996), Rio de Janeiro(2016),Beijing(2008), Athena(2004), Barcelona(1992), London(2012),Seoul(1988),Munich(1972),Los Angeles(1984)
+**Observation:**  The top ten cities with the highest participation are Sydney(2000), Atlanta(1996), Rio de Janeiro(2016),Beijing(2008), Athina(2004), Barcelona(1992), London(2012),Seoul(1988),Munich(1972),Los Angeles(1984)
 
-#### 8. Top 10 athletes with the highest participation in the Olympics
+### 8. Top 10 athletes with the highest participation in the Olympics
 
-```{r fig.width=15}
+```{r fig.align="left", fig.width=15}
 ##
 Top10a <-
     athletes %>%
@@ -417,7 +502,7 @@ ggplot(Top10a, aes(x=Name, y=number))+
 geom_col(fill="gold") +
 theme_minimal()+
 labs(y="Number of Olympics ")+
-xlab("athlete")+
+xlab("Athletes")+
 theme(plot.title = element_text(hjust = 0.5)) +
 ggtitle("Top 10 most participated athlete in the Olympics")+
 geom_vline(xintercept = 0)+
@@ -428,12 +513,12 @@ geom_hline(yintercept = 0)
 
 **Observation:** As we can see nearly all the top 10 athletes participated in the Olympics more than 30 times and the one with the most is Heikki Ilmari Savolainen	with 39 times
 
-#### 9. Athlete with the most number of medals per sport
+### 9. Athletes with the most number of medals in each sport
 
 ```{r}
 ###Athlete with the most number of medals per sport
 df <- 
-   athletes%>%
+   athletes %>%
    filter( Medal != 'None') %>%
    select(Name,Sport)%>%
    group_by(Name,Sport) %>%
@@ -443,12 +528,12 @@ df <-
 dfuevent <- df[!duplicated(df$Sport),]
  
 kable(
-  dfuevent
+  head(dfuevent,11)
   ,caption=("Athlete with the most number of medals per sport")
   )
 
 ```
 
-**Observation:** For the Swimming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of medals equal or more than 10 in different sports.
+**Observation:** For Swimming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of medals equal or more than 10 in different sports.
 
 
