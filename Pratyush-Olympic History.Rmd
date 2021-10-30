@@ -310,6 +310,8 @@ kable (
 
 ```
 
+Observation: From the above table we can see the first year in which each country won a medal for football. The first countries to win medals for football are UK,Belgium,France and Netherlands and all these countries are from Europe.
+
 # Trend analysis per sport per country for the gap between medals for Football
 ```{r}
 
@@ -335,6 +337,8 @@ geom_hline(yintercept = 0)
 
 
 ```
+Observation: The gap between first and last medals for football for each country is displayed. Canada has the largest gap while Czech Republic has the smallest gap. 
+
 # Comparison of medals won by regions in Summer & Winter.
 ```{r fig.width=10}
 #Summer
@@ -393,8 +397,6 @@ geom_hline(yintercept = 0)
 
 grid.arrange(Ans3.1,Ans3.2,ncol=1)
 
-
-
-
-
 ```
+
+Observation: In Summer USA takes the top spot in the number of medals won and Russia stood second. When it comes to winter the positions are interchanged. Germany remains constant in both summer and winter. The graph has a uniform increase in the number of medals in summer but its not a uniform increase in winter, So this means that the winter games are more competitive while summer has a distinctive winner. 
