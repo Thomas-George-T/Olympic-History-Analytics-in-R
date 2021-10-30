@@ -288,3 +288,167 @@ All our boundary cases looks reasonable and accurate.
 
 # 2.6 Publishing 
 The data is cleaned & wrangled and made available for the team to develop business cases.
+
+
+# 3. Analytical Questions
+
+### 1. Trend analyis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
+ 
+```{r fig.align="center", echo = FALSE,fig.width = 10}
+
+p1 <-
+athletes %>%
+    filter(Medal!='None' & Year<=1956) %>%
+    group_by(Region) %>%
+    summarize(total_medals=n()) %>%
+    arrange(desc(total_medals))  %>%
+    mutate(Region=factor(Region, levels=Region)) %>%
+    slice(1:10) %>%
+    ggplot( aes(x=Region, y=total_medals))+
+    geom_col(fill="steelblue") +  
+    theme_minimal()+
+    labs(y="Number of Medals")+
+    xlab("")+
+    theme(plot.title = element_text(hjust = 0.5)) +
+    ggtitle("Top 10 Regions with highest Medals from 1896 - 1956")+
+    geom_vline(xintercept = 0)+
+    geom_hline(yintercept = 0)
+
+p2 <-
+athletes %>%
+    filter(Medal!='None' & Year>1956) %>%
+    group_by(Region) %>%
+    summarize(total_medals=n()) %>%
+    arrange(desc(total_medals))  %>%
+    mutate(Region=factor(Region, levels=Region)) %>%
+    slice(1:10) %>%
+    ggplot( aes(x=Region, y=total_medals))+
+    geom_col(fill="steelblue") +  
+    theme_minimal()+
+    labs(y="Number of Medals")+
+    xlab("")+
+    theme(plot.title = element_text(hjust = 0.5)) +
+    ggtitle("Top 10 Regions with highest Medals from 1957 - 2016")+
+    geom_vline(xintercept = 0)+
+    geom_hline(yintercept = 0)
+
+grid.arrange(p1, p2, ncol=1)
+
+
+```
+
+**Observation**: USA remains the region with the highest number of Medals in the combined history of 120 years in Olympics. Russia, a new inclusion in the top 10 took 2nd position in the later half.Germany moved into the 3rd position in the second half while UK and France slipped from 2nd and 3rd to 8th and 9th position. There are new countries in the later half such as Australia, Canada and Japan which where not in the top 10 for the earlier history of Olympics. 
+
+###  2. Medals won by Males/Females over Time
+
+```{r fig.width=10}
+
+athletes %>% 
+  filter(Medal!='None') %>%
+  group_by(Year, Sex) %>%
+  summarize(Total_Medals = n()) %>%
+  ggplot(., aes(x=Year, y=Total_Medals, group=Sex, color=Sex))+
+  geom_point(size=2) +
+  geom_line()  +
+  scale_color_manual(values=c("darkblue","red")) +
+  labs(title = "Medals won by Male/Female over Time") +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+**Observation:** From the graph, we can see that there is a gradual increase in the number of medals won by female athletes over time. Male athletes tend to outnumber female athletes but their numbers also keep fluctuating over time. After the years 1994, the summer and winter Olympic games were split and held during seperate years, hence why the graph shows different points.   
+
+##  3. Finding the most participated sport in Olympics every year
+
+```{r}
+
+q3<-
+athletes %>% 
+  group_by(Year, Sport) %>%
+  summarize(Participation = n()) %>%
+  arrange(Year,desc(Participation))
+  
+  q3 <- q3[!duplicated(q3$Year),] # Taking only the first record
+  
+  kable(
+  q3,
+  caption="Most participated Sport in Olympic Games every year"
+  )
+
+```
+**Observation**: This table shows that Athletics has remained the most contested sport in 120 years of Olympics. Art Competitions were the highest participated Olympic Sport in 1932 before it was removed from the Olympics. As the Olympic Winter and Summer games were seperated into different years from 1994, Cros Country Skiing emerged as the most participated game held during the Winters.
+
+
+
+#### 7. Top 10 host cities with the highest participation.
+
+```{r}
+
+##Top 10 host cities with highest participation.
+Top10 <-
+  athletes %>%
+    select(Year,City) %>%
+    group_by(Year,City) %>%
+    summarize(number=n())  %>%
+    arrange(desc(number))
+
+kable(
+  Top10 
+  ,caption=("Top 10 host cities with highest participation")
+)
+
+##observation:
+```
+
+**Observation:**  The top ten cities with the highest participation are Sydney(2000), Atlanta(1996), Rio de Janeiro(2016),Beijing(2008), Athena(2004), Barcelona(1992), London(2012),Seoul(1988),Munich(1972),Los Angeles(1984)
+
+#### 8. Top 10 athletes with the highest participation in the Olympics
+
+```{r fig.width=15}
+##
+Top10a <-
+    athletes %>%
+    select(Name) %>%
+    group_by(Name) %>%
+    summarize(number=n())  %>%
+    arrange(desc(number)) %>%
+    slice(0:10)
+
+ggplot(Top10a, aes(x=Name, y=number))+
+geom_col(fill="gold") +
+theme_minimal()+
+labs(y="Number of Olympics ")+
+xlab("athlete")+
+theme(plot.title = element_text(hjust = 0.5)) +
+ggtitle("Top 10 most participated athlete in the Olympics")+
+geom_vline(xintercept = 0)+
+geom_hline(yintercept = 0)
+
+
+```
+
+**Observation:** As we can see nearly all the top 10 athletes participated in the Olympics more than 30 times and the one with the most is Heikki Ilmari Savolainen	with 39 times
+
+#### 9. Athlete with the most number of medals per sport
+
+```{r}
+###Athlete with the most number of medals per sport
+df <- 
+   athletes%>%
+   filter( Medal != 'None') %>%
+   select(Name,Sport)%>%
+   group_by(Name,Sport) %>%
+   summarize(number=n())  %>%
+   arrange(desc(number)) 
+
+dfuevent <- df[!duplicated(df$Sport),]
+ 
+kable(
+  dfuevent
+  ,caption=("Athlete with the most number of medals per sport")
+  )
+
+```
+
+**Observation:** For the Swimming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of medals equal or more than 10 in different sports.
+
+
