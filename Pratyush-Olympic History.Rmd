@@ -324,7 +324,7 @@ arrange(desc(Number_of_Years)) %>%
 mutate(Region=factor(Region, levels=Region)) %>%
 slice(1:20) %>%
 ggplot( aes(y=Region, x=Number_of_Years))+
-geom_col(fill="steelblue") +
+geom_col(fill="orange") +
 theme_minimal()+
 #labs(y="Region")+
 xlab("Number of Years")+
@@ -368,7 +368,7 @@ arrange(desc(number_of_medals)) %>%
 mutate(Region=factor(Region, levels=Region)) %>%
 slice(1:20) %>%
 ggplot( aes(y=Region, x=number_of_medals))+
-geom_col(fill="steelblue") +
+geom_col(fill="green") +
 theme_minimal()+
 #labs(y="Region")+
 xlab("Medals")+
@@ -386,7 +386,7 @@ arrange(desc(number_of_medals)) %>%
 mutate(Region=factor(Region, levels=Region)) %>%
 slice(1:20) %>%
 ggplot( aes(y=Region, x=number_of_medals))+
-geom_col(fill="steelblue") +
+geom_col(fill="purple") +
 theme_minimal()+
 #labs(y="Region")+
 xlab("Medals")+
