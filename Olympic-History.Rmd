@@ -9,7 +9,7 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, message=FALSE}
+```{r, echo=FALSE, message=FALSE}
 #Importing Required packages
 library(tidyverse)
 library(reshape2)
@@ -20,20 +20,74 @@ library(ggplot2)
 library(data.table)
 ```
 
-# 1. Data Acquisition
+# 1. Introduction
 
-## Importing the datasets
-```{r} 
+## Data Description
+
+We are considering 120 years of Olympic history where we find some interesting trends after analysis. There are two files in our data set:
+
+1.The file *athlete_events.csv* contains 271116 rows and 15 columns. Each row corresponds to an individual athlete competing in an individual Olympic event (athlete-events). The columns are:
+
+- ID : Unique number for each athlete
+- Name : Athlete's name
+- Sex : M or F
+- Age : Integer
+- Height : In centimeters
+- Weight : In kilograms
+- Team : Team name
+- NOC : National Olympic Committee 3-letter code
+- Games : Year and season
+- Year : Integer
+- Season : Summer or Winter
+- City : Host city
+- Sport : Sport
+- Event : Event
+- Medal : Gold, Silver, Bronze, or NA
+
+2.The file *noc_regions.csv* contains 230 rows and 3 columns. Each row shows the special NOC code that denotes a region/country along with notes. The columns are:
+
+- NOC : National Olympic Committee 3 letter code
+- Country name : matches with regions in map_data("world")
+- Notes : Special notes if any
+
+We take a lot at 9 business questions that we want answered.
+
+# Data Acquisition
+
+We acquire the data set from Kaggle: https://www.kaggle.com/heesoo37/120-years-of-olympic-history-athletes-and-results?select=athlete_events.csv
+
+
+```{r, echo=FALSE} 
 # Data of the athelets and countries
 atheletes_df <- read.csv('athlete_events.csv', header = TRUE, sep = ',')
-head(atheletes_df, 5) # structure of the dataset
 ```
 
-```{r}
+Looking at the structure of Data set 1 - Athletes Data. Previewing only a few columns for PDF formatting
+
+```{r, echo=FALSE}
+# Structure of the dataset 1 - Athletes
+
+kable(
+  atheletes_df %>%
+  select(Name,Sex,Age,Height,Weight,Medal,Sport) %>%
+  slice(0:5)
+)
+```
+
+```{r, echo=FALSE}
 # Importing Data of the regions tied with the NOC code
 regions_df <- read.csv('noc_regions.csv', header= TRUE, sep =',')
-head(regions_df, 5)
 ```
+
+Looking at the structure of Data set 2 - Region Data
+
+```{r, echo=FALSE}
+# Structure of the dataset 2 - Region Data
+kable(
+head(regions_df, 5)
+)
+```
+
 
 # 2. Data Wrangling
 
@@ -41,18 +95,22 @@ head(regions_df, 5)
 
 ### A. Summary Statistics
 
-```{r}
+Computing summary of the athletes data (Data set 1)
+
+```{r, echo=FALSE}
 summary(atheletes_df)
 ```
-**We can see that there are NA's in the numerical fields of Age, Height, Weight which we will handle**
+We can see that there are NA's in the numerical fields of Age, Height, Weight which we will handle
 
-```{r}
+Computing summary of region data (Data set 2)
+
+```{r, echo=FALSE}
 summary(regions_df)
 ```
 ### B. Discovering Discrete Data
 
 
-```{r}
+```{r, echo=FALSE}
 kable(
   atheletes_df %>%
     summarise(total_records=n()),
@@ -63,7 +121,7 @@ kable(
 
 
 
-```{r}
+```{r, echo=FALSE}
 kable(
   regions_df %>%
     summarise(total_records=n()),
@@ -75,7 +133,7 @@ kable(
 Looking for NA's in all the columns
 
 
-```{r}
+```{r, echo=FALSE}
 # Store the cols with missing values 
 list_na <- colnames(atheletes_df)[apply(atheletes_df, 2, anyNA)]
 list_na
@@ -84,7 +142,7 @@ list_na
 We have NA's for numerical data: Age, Height & Weight and for categorical data: Medal.
 
 
-```{r}
+```{r, echo=FALSE}
 kable(
   atheletes_df %>%
     group_by(Medal) %>%
@@ -93,9 +151,9 @@ kable(
   
 )
 ```
-**There are 231333 NA's for Medals which is categorical data and we need to handle this in the cleaning part**
+There are 231333 NA's for Medals which is categorical data and we need to handle this in the cleaning part
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 #looking for NA's in regions_df
 kable(
   regions_df %>%
@@ -106,36 +164,30 @@ kable(
 )
 ```
 
-No NA's in region_df
+There are 3 records with NA in region_df
 
 
 
 ## 2.2 Structuring
 
-```{r}
-head(atheletes_df,5)
-```
-
-**We can see that we don't need to do additional restructuring as columns like "Games" is already split and available as Year and Season**
+We can see that we don't need to do additional restructuring as columns like "Games" is already split and available as Year and Season
 
 ## 2.3 Cleaning
 
 ### A. Handling Missing Data
 
-We can't filter out the NA values since the columns that exhibit them are required for our analysis. We will be filling the NA values for numerical columns like Age, Height, Weight with the **median** values since we require whole numbers. The Medals are filled with **'None'** which would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze).
-
-**We didn't filter out the NA records in Age, Height and Weight because that would mean that crucial data would be dropped leading to data skewness, we are using the Median values since we require whole numbers and to reduce the degree of skewness while maintaining data integrity.**
+We don't filter out the NA values since the columns that exhibit them are required for our analysis and we don't want to drop crucial data which would lead to data skewness. We will be filling the NA values for numerical columns like Age, Height, Weight with the **median** values since we require whole numbers and to reduce the degree of skewness while maintaining data integrity. The Medals are filled with **'None'** which would signify that the athletes simply didn't win any of the categories of Medals (Gold, Silver, Bronze).
 
 #### B. Replacing NA's in Medals
 
-```{r, results=FALSE}
+```{r, echo=FALSE}
 atheletes_df$Medal <- atheletes_df$Medal %>% 
-  replace_na("None") # It is assumed tha the athlete participated in the sport but didn't win a medal
+  replace_na("None") # It is assumed that the athlete participated in the sport but didn't win a medal
 ```
 
 Calculating Missing Median for the missing values for Age, Height and Weight
 
-```{r}
+```{r, echo=FALSE}
 
 list_na <- list_na[ list_na !="Medal"]
 
@@ -148,7 +200,7 @@ missing_median
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 # Replace the missing values with median
 atheletes_df <- atheletes_df %>%
    mutate(
@@ -160,21 +212,20 @@ atheletes_df <- atheletes_df %>%
 
 #### C. Handling Missing data in Regions
 
-
-```{r}
+We replace the Na's values with region/notes for respective NOC's for the region data.
+```{r, echo=FALSE}
 # Replacing Na's with the respective region/notes for the NOC's
 regions_df$region <- ifelse(is.na(regions_df$region), regions_df$notes, regions_df$region)
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 kable(
   regions_df %>%
     filter(is.na(region)) %>%
     group_by(region) %>%
     summarise(total_records=n())
   ,caption = "Number of NA's in Region after fix"
-  
 )
 
 ```
@@ -188,7 +239,7 @@ kable(
 We will join regions_df and atheletes_df based on the NOC code to get the Region for enriching the data.
 
 
-```{r}
+```{r, echo=FALSE, results='hide'}
 athletes <- left_join(atheletes_df, regions_df, by="NOC")
 
 # Replacing Region with Country to make the data more meaningful
@@ -199,13 +250,13 @@ head(athletes,5)
 
 ```
 
-**We don't have any other attribute to split or to create a new category since we believe that we have all the required columns for our analysis**
+We don't have any other attribute to split or to create a new category since we believe that we have all the required columns for our analysis.
 
 ## 2.5 Validating
 
 ### A. Check for any missing values
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 
  # Counting the number of NA's for all the columns
  colnames(athletes)[apply(athletes, 2, anyNA)]
@@ -221,9 +272,9 @@ kable(
 )
 
 ```
-**For NOC SGP, there are no records in our regions_df but is present in atheltes_df, as a result we are getting NA values after the join. We will add Singapore Region to the NOC in the joined data** 
+For NOC SGP, there are no records in our regions_df but is present in atheltes_df, as a result we are getting NA values after the join. We will add Singapore Region to the NOC in the joined data. Applying fix:
 
-```{r}
+```{r, echo=FALSE}
 
 athletes$Region <- ifelse((is.na(athletes$Region) & athletes$NOC=='SGP'), "Singapore", athletes$Region)
 
@@ -245,24 +296,22 @@ kable(
 
 ### B. Check for Duplicates
 
-```{r}
+```{r, echo=FALSE}
 sum(duplicated(athletes))
 ```
-**There 1385 duplicate records on the whole data set**
+There **1385** duplicate records on the whole data set. Taking unique values to remove duplicates.
 
 
-```{r}
+```{r, echo=FALSE}
 # Removing the duplicates
 athletes <- unique(athletes)
 
 ```
 
 
-
-
 ### C. Checking boundary cases
 
-```{r}
+```{r, echo=FALSE}
 kable (
 athletes %>%
 summarise(max_age=max(Age), min_age=min(Age), Average_Age=mean(Age)),
@@ -284,7 +333,7 @@ caption="Weight boundary cases"
 
 )
 ```
-All our boundary cases looks reasonable and accurate.
+All our boundary cases looks reasonable and accurate after our wrangling.
 
 ## 2.6 Publishing 
 The data is cleaned & wrangled and made available for the team to develop business cases.
@@ -294,7 +343,7 @@ The data is cleaned & wrangled and made available for the team to develop busine
 
 ### 1. Trend analysis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
  
-```{r fig.align="center",fig.width = 10}
+```{r fig.align="center",fig.width = 10, echo=FALSE}
 p1 <-
 athletes %>%
     filter(Medal!='None' & Year<=1956) %>%
@@ -340,7 +389,7 @@ grid.arrange(p1, p2, ncol=1)
 
 ###  2. Medals won by Males/Females over Time
 
-```{r fig.width=10}
+```{r fig.width=10, echo=FALSE, message=FALSE}
 
 athletes %>% 
   filter(Medal!='None') %>%
@@ -358,7 +407,7 @@ athletes %>%
 
 ###  3. Finding the most participated sport in Olympics every year
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 
 q3<-
 athletes %>% 
@@ -378,7 +427,7 @@ athletes %>%
 
 ### 4. In which Olympic year did a particular country win a medal for the first time for a particular sport
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 Ans1 <-
 athletes %>%
 filter(Sport=="Football",Medal!="None") %>%
@@ -398,7 +447,7 @@ kable (
 **Observation:** From the above table we can see the first year in which each country won a medal for football. The first countries to win medals for football are UK,Belgium,France and Netherlands and all these countries are from Europe.
 
 ### 5. Trend analysis per sport per country for the gap between medals for Football
-```{r}
+```{r, echo=FALSE}
 athletes %>%
 filter(Sport=="Football",Medal!="None") %>%
 select(Region, Year) %>%
@@ -422,7 +471,7 @@ geom_hline(yintercept = 0)
 
 
 ### 6. Comparison of medals won by regions in Summer & Winter.
-```{r fig.width=10}
+```{r fig.width=10, echo=FALSE}
 Ans3.1 <-
 athletes %>%
 filter(Medal!='None',Season=="Summer") %>%
@@ -467,7 +516,7 @@ grid.arrange(Ans3.1,Ans3.2,ncol=1)
 
 ### 7. Top 10 Host cities with the highest participation.
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 ## Top 10 Host cities with highest participation.
 Top10 <-
   athletes %>%
@@ -488,7 +537,7 @@ kable(
 
 ### 8. Top 10 athletes with the highest participation in the Olympics
 
-```{r fig.align="left", fig.width=15}
+```{r fig.align="left", fig.width=15, echo=FALSE}
 ##
 Top10a <-
     athletes %>%
@@ -515,7 +564,7 @@ geom_hline(yintercept = 0)
 
 ### 9. Athletes with the most number of medals in each sport
 
-```{r}
+```{r, echo=FALSE, message=FALSE}
 ###Athlete with the most number of medals per sport
 df <- 
    athletes %>%
@@ -536,4 +585,8 @@ kable(
 
 **Observation:** For Swimming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of medals equal or more than 10 in different sports.
 
+# Summary
 
+After careful analysis of Olympic history worth 120 years. We were able to decipher lot of emerging patterns and visualize them. We were able to gain valuable insights about our business questions through various plots.
+
+**All students of Group 9 - Thomas George Thomas, Yang Liu, Pratyush Pothuneedi contributed equally to the project.**
