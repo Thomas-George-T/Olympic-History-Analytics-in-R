@@ -48,5 +48,8 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 8. Top 10 athletes with the highest participation in the Olympics
 9. Athletes with the most number of medals in each sport
 
+## Report
+View the report [here](https://github.com/Thomas-George-T/Olympic-History-Analytics-in-R/blob/main/Olympic-History.pdf)
+
 ## Summary
 After careful analysis of Olympic history worth 120 years. We were able to decipher lot of emerging patterns and visualize them. We were able to gain valuable insights about our business questions through various plots.
