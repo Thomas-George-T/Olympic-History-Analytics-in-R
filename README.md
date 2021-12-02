@@ -49,7 +49,8 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 9. Athletes with the most number of medals in each sport
 
 ## Report
-View the report [here](https://github.com/Thomas-George-T/Olympic-History-Analytics-in-R/blob/main/Olympic-History.pdf)
+We cleaned, wrangled, structured and enriched our data to make it ready for exploratory data analysis (EDA). We then data analysis on the above business questions and visualized the results in terms.
+View the full report [here](https://github.com/Thomas-George-T/Olympic-History-Analytics-in-R/blob/main/Olympic-History.pdf)
 
 ## Summary
 After careful analysis of Olympic history worth 120 years. We were able to decipher lot of emerging patterns and visualize them. We were able to gain valuable insights about our business questions through various plots.
