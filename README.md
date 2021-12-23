@@ -6,6 +6,16 @@
 
 Looking at 120 years of Olympic history and discovering interesting trends, patterns and visualizing our findings using R.
 
+<br>
+
+<p align="center">
+	<a href="#">
+		<img src="https://raw.githubusercontent.com/Thomas-George-T/Thomas-George-T/master/assets/r-lang.svg" alt="R Language" title="R" hspace=80 />
+	</a>
+</p>
+
+
+
 ## Data Description
 
 We are considering 120 years of Olympic history where we find some interesting trends after analysis. There are two files in our data set:
