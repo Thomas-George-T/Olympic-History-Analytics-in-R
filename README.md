@@ -51,8 +51,28 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 ## Analytical Questions
 
 1. Trend analysis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
+
+<p align="center">
+	<a href="#">
+		<img src="assets/q1.JPG" />
+	</a>
+</p>
+
+**Observation:** USA remains the region with the highest number of Medals in the combined history of 120 years in Olympics. Russia, a new inclusion in the top 10 took 2nd position in the later half. Germany moved into the 3rd position in the second half while UK and France slipped from 2nd and 3rd to 8th and 9th position. There are new countries in the later half such as Australia, Canada and Japan which where not in the top 10 for the earlier history of Olympics.
+
 2. Medals won by Males/Females over Time
+
+<p align="center">
+	<a href="#">
+		<img src="assets/q2.JPG" />
+	</a>
+</p>
+
+**Observation:** From the graph, we can see that there is a gradual increase in the number of medals won by female athletes over time. Male athletes tend to outnumber female athletes but their numbers also keep fluctuating over time. After the years 1994, the summer and winter Olympic games were split and held during seperate years, hence why the graph shows different points.
+
 3. Finding the most participated sport in Olympics every year
+
+
 4. In which Olympic year did a particular country win a medal for the first time for a particular sport
 5. Trend analysis per sport per country for the gap between medals for Football
 6. Comparison of medals won by regions in Summer & Winter.	
