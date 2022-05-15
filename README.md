@@ -50,7 +50,7 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 ## Analytical Questions
 
-1. Trend analysis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
+### Trend analysis of Top 10 regions with the highest number of medals between 1896 - 1956 & 1957 - 2016
 
 <p align="center">
 	<a href="#">
@@ -60,7 +60,7 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 **Observation:** USA remains the region with the highest number of Medals in the combined history of 120 years in Olympics. Russia, a new inclusion in the top 10 took 2nd position in the later half. Germany moved into the 3rd position in the second half while UK and France slipped from 2nd and 3rd to 8th and 9th position. There are new countries in the later half such as Australia, Canada and Japan which where not in the top 10 for the earlier history of Olympics.
 
-2. Medals won by Males/Females over Time
+### Medals won by Males/Females over Time
 
 <p align="center">
 	<a href="#">
@@ -74,11 +74,43 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 
 4. In which Olympic year did a particular country win a medal for the first time for a particular sport
-5. Trend analysis per sport per country for the gap between medals for Football
-6. Comparison of medals won by regions in Summer & Winter.	
+
+### Trend analysis per sport per country for the gap between medals for Football
+
+<p align="center">
+	<a href="#">
+		<img src="assets/q5.JPG" />
+	</a>
+</p>
+
+**Observation:** The gap between first and last medals for football for each country is displayed. Canada has the largest gap of 112 years while Czech Republic has the smallest gap of 16 years.
+
+### Comparison of medals won by regions in Summer & Winter	
+
+<p align="center">
+	<a href="#">
+		<img src="assets/q6.JPG" />
+	</a>
+</p>
+
+**Observation:** In Summer USA takes the top spot in the number of medals won and Russia stood second. When it comes to winter the positions are interchanged. Germany remains constant in both summer and winter. The graph has a uniform increase in the number of medals in summer but its not a uniform increase in winter, So this means that the winter games are more competitive while summer has a distinctive winner. 
+
 7. Top 10 Host cities with the highest participation.
-8. Top 10 athletes with the highest participation in the Olympics
+
+### Top 10 athletes with the highest participation in the Olympics
+
+<p align="center">
+	<a href="#">
+		<img src="assets/q8.JPG" />
+	</a>
+</p>
+
+**Observation:** As we can see nearly all the top 10 athletes participated in the Olympics more than 30 times and the one with the most is Heikki Ilmari Savolainen with 39 times
+
+
 9. Athletes with the most number of medals in each sport
+
+
 
 ## Report
 We cleaned, wrangled, structured and enriched our data to make it ready for exploratory data analysis (EDA). We then data analysis on the above business questions and visualized the results in terms.
