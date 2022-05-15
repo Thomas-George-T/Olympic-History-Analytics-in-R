@@ -70,10 +70,33 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 **Observation:** From the graph, we can see that there is a gradual increase in the number of medals won by female athletes over time. Male athletes tend to outnumber female athletes but their numbers also keep fluctuating over time. After the years 1994, the summer and winter Olympic games were split and held during seperate years, hence why the graph shows different points.
 
-3. Finding the most participated sport in Olympics every year
+### Finding the most participated sport in Olympics every year
 
+<p align="center">
+	<a href="#">
+		<img src="assets/Q3p1.JPG" />
+	</a>
+	<br>
+	<a href="#">
+		<img src="assets/Q3p2.JPG" />
+	</a>
+</p>
 
-4. In which Olympic year did a particular country win a medal for the first time for a particular sport
+**Observation**: This table shows that Athletics has remained the most contested sport in 120 years of Olympics. Art Competitions were the highest participated Olympic Sport in 1932 before it was removed from the Olympics. As the Olympic Winter and Summer games were seperated into different years from 1994, Cros Country Skiing emerged as the most participated game held during the Winters.
+
+### In which Olympic year did a particular country win a medal for the first time for a particular sport
+
+<p align="center">
+	<a href="#">
+		<img src="assets/Q4p1.JPG" />
+	</a>
+	<br>
+	<a href="#">
+		<img src="assets/Q4p2.JPG" />
+	</a>
+</p>
+
+**Observation:** From the above table we can see the first year in which each country won a medal for football. The first countries to win medals for football are UK,Belgium,France and Netherlands and all these countries are from Europe.
 
 ### Trend analysis per sport per country for the gap between medals for Football
 
@@ -95,7 +118,15 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 **Observation:** In Summer USA takes the top spot in the number of medals won and Russia stood second. When it comes to winter the positions are interchanged. Germany remains constant in both summer and winter. The graph has a uniform increase in the number of medals in summer but its not a uniform increase in winter, So this means that the winter games are more competitive while summer has a distinctive winner. 
 
-7. Top 10 Host cities with the highest participation.
+### Top 10 Host cities with the highest participation
+
+<p align="center">
+	<a href="#">
+		<img src="assets/Q7.JPG" />
+	</a>
+</p>
+
+**Observation:**  The top ten cities with the highest participation are Sydney(2000), Atlanta(1996), Rio de Janeiro(2016),Beijing(2008), Athina(2004), Barcelona(1992), London(2012),Seoul(1988),Munich(1972),Los Angeles(1984)
 
 ### Top 10 athletes with the highest participation in the Olympics
 
@@ -107,10 +138,15 @@ We acquire the data set from [Kaggle](https://www.kaggle.com/heesoo37/120-years-
 
 **Observation:** As we can see nearly all the top 10 athletes participated in the Olympics more than 30 times and the one with the most is Heikki Ilmari Savolainen with 39 times
 
+### Athletes with the most number of medals in each sport
 
-9. Athletes with the most number of medals in each sport
+<p align="center">
+	<a href="#">
+		<img src="assets/Q9.JPG" />
+	</a>
+</p>
 
-
+**Observation:** For Swiming, Michael Fred Phelps, II won the most number of medals(28) and there are 11 players with the number of medals equal or more than 10 in different sports.
 
 ## Report
 We cleaned, wrangled, structured and enriched our data to make it ready for exploratory data analysis (EDA). We then data analysis on the above business questions and visualized the results in terms.
